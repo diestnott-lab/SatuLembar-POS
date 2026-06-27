@@ -721,17 +721,31 @@ def config_setting_page():
             # Form Update Harga
             st.write("---")
             st.write("**Update Harga/Stok Cepat**")
+        
+        # Pengecekan: Jika database produk TIDAK KOSONG, jalankan form edit
+        if not df_produk.empty:
             prod_edit = st.selectbox("Pilih Produk yang Diedit", df_produk["Nama_Produk"])
-            p_match = df_produk[df_produk["Nama_Produk"] == prod_edit].iloc[0]
+            p_match = df_produk[df_produk["Nama_Produk"] == prod_edit]
             
-            with st.form("form_edit_product"):
-                col_e1, col_e2, col_e3 = st.columns(3)
-                with col_e1:
-                    edit_beli = st.number_input("Harga Modal Baru", min_value=0, value=int(p_match["Harga_Beli"]))
-                with col_e2:
-                    edit_jual = st.number_input("Harga Jual Baru", min_value=0, value=int(p_match["Harga_Jual"]))
-                with col_e3:
-                    edit_stok = st.number_input("Edit Stok", min_value=0, value=int(p_match["Stok_Sistem"]))
+            if not p_match.empty:
+                p_match_row = p_match.iloc[0]
+                
+                with st.form("form_edit_product"):
+                    col_e1, col_e2, col_e3 = st.columns(3)
+                    with col_e1:
+                        edit_beli = st.number_input("Harga Modal Baru", min_value=0, value=int(p_match_row["Harga_Beli"]))
+                    with col_e2:
+                        edit_jual = st.number_input("Harga Jual Baru", min_value=0, value=int(p_match_row["Harga_Jual"]))
+                    with col_e3:
+                        edit_stok = st.number_input("Edit Stok", min_value=0, value=int(p_match_row["Stok_Sistem"]))
+                    
+            # Catatan: Pastikan tombol submit form (st.form_submit_button) milik Anda 
+            # tetap ada di bawah sini dengan indentasi (jarak spasi) yang sejajar.
+            else:
+            st.warning("Produk tidak ditemukan.")
+            else:
+            # Jika database kosong, tampilkan pesan edukatif ini daripada eror merah
+            st.info("💡 Database produk Anda masih kosong. Silakan tambah produk baru terlebih dahulu pada menu di atas untuk mengaktifkan fitur edit ini.")
                     
                 if st.form_submit_button("Terapkan Perubahan", use_container_width=True):
                     update_cell_by_id("tb_produk", "ID_Produk", p_match["ID_Produk"], "Harga_Beli", edit_beli)
