@@ -741,11 +741,11 @@ def config_setting_page():
                     
             # Catatan: Pastikan tombol submit form (st.form_submit_button) milik Anda 
             # tetap ada di bawah sini dengan indentasi (jarak spasi) yang sejajar.
+           else:
+               st.warning("Produk tidak ditemukan.")
         else:
-            st.warning("Produk tidak ditemukan.")
-    else:
-        # Jika database kosong, tampilkan pesan edukatif ini daripada eror merah
-        st.info("💡 Database produk Anda masih kosong. Silakan tambah produk baru terlebih dahulu pada menu di atas untuk mengaktifkan fitur edit ini.")
+            # Jika database kosong, tampilkan pesan edukatif ini daripada eror merah
+            st.info("💡 Database produk Anda masih kosong. Silakan tambah produk baru terlebih dahulu pada menu di atas untuk mengaktifkan fitur edit ini.")
                     
                 if st.form_submit_button("Terapkan Perubahan", use_container_width=True):
                     update_cell_by_id("tb_produk", "ID_Produk", p_match["ID_Produk"], "Harga_Beli", edit_beli)
