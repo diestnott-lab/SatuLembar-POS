@@ -724,7 +724,7 @@ def config_setting_page():
         
         # Pengecekan: Jika database produk TIDAK KOSONG, jalankan form edit
                 # 1. 'if' utama harus sejajar lurus dengan 'else' pasangannya
-                if not df_produk.empty:
+        if not df_produk.empty:
             prod_edit = st.selectbox("Pilih Produk yang Diedit", df_produk["Nama_Produk"])
             p_match = df_produk[df_produk["Nama_Produk"] == prod_edit]
             
