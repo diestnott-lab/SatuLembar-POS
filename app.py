@@ -324,7 +324,7 @@ def cash_register_page():
         total_akhir = max(0, total_belanja - nilai_diskon)
         
         # Tampilan Ringkasan Biaya
-        st.write(f"Subtotal: **Rp {total_belanja:,,}**")
+        st.write(f"Subtotal: **Rp {int(total_belanja):,}**")
         if nilai_diskon > 0:
             st.write(f"Potongan Diskon: <span style='color:red;'>- Rp {nilai_diskon:,,}</span>", unsafe_allow_html=True)
         st.markdown(f"### Total Tagihan: <span style='color:green;'>Rp {total_akhir:,,}</span>", unsafe_allow_html=True)
