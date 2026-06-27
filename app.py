@@ -326,8 +326,8 @@ def cash_register_page():
         # Tampilan Ringkasan Biaya
         st.write(f"Subtotal: **Rp {int(total_belanja):,}**")
         if nilai_diskon > 0:
-            st.write(f"Potongan Diskon: <span style='color:red;'>- Rp {int(nilai_diskon) :,}</span>", unsafe_allow_html=True)
-        st.markdown(f"### Total Tagihan: <span style='color:green;'>Rp {int(total_tagihan):,}</span>", unsafe_allow_html=True)
+            st.write(f"Potongan Diskon: <span style='color:red;'>- Rp {int(nilai_diskon):,}</span>", unsafe_allow_html=True)
+        st.markdown(f"### Total Tagihan: <span style='color:green;'>Rp {int(total_akhir):,}</span>", unsafe_allow_html=True)
         
         # Pilihan Metode Bayar
         metode_pembayaran = st.radio("Metode Pembayaran", ["Tunai", "QRIS"], horizontal=True)
