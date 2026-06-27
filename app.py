@@ -28,18 +28,26 @@ def init_gsheet_connection():
     ]
     
         # 1. Cek konfigurasi database dari Streamlit Secrets (Cloud) dahulu
-    if "gcp_service_account" in st.secrets:
-        # Karena format TOML, data otomatis menjadi dictionary (tidak perlu json.loads)
-        creds_dict = dict(st.secrets["gcp_service_account"])
-        creds = ServiceAccountCredentials.from_json_keyfile_dict(creds_dict, scope)
-    # 2. Jika tidak ada di Cloud, baru cek file lokal (Pydroid/Laptop)
-    elif os.path.exists("credentials.json"):
-        creds = ServiceAccountCredentials.from_json_keyfile_name("credentials.json", scope)
-    else:
-        st.error("Kunci database tidak ditemukan! Pastikan 'gcp_service_account' sudah terisi di Secrets Streamlit.")
-        st.stop()
+    # Hubungkan ke Google Sheets dengan metode modern (Tanpa oauth2client)
+    try:
+        if "gcp_service_account" in st.secrets:
+            # Membaca data TOML dari Secrets Streamlit
+            creds_dict = dict(st.secrets["gcp_service_account"])
+            client = gspread.service_account_from_dict(creds_dict)
+        elif os.path.exists("credentials.json"):
+            # Membaca data dari file lokal jika di Pydroid/Tablet
+            client = gspread.service_account(filename="credentials.json")
+        else:
+            st.error("Kunci database tidak ditemukan di Secrets maupun lokal!")
+            st.stop()
+            
+        # METODE TEMBAK LANGSUNG: Ganti teks di bawah dengan URL yang Anda salin di Langkah 1
+        sheet = client.open_by_url("https://docs.google.com/spreadsheets/d/12ieWVopfzzjMcqEYW2nqqJm4LD3VNKi0CIwIRjNUOoc/edit?usp=drivesdk")
+        return sheet
         
-    client = gspread.authorize(creds)
+    except Exception as e:
+        st.error(f"Gagal koneksi ke database. Pastikan URL benar & email robot sudah di-share. Error: {e}")
+        st.stop()
     
     # Membuka database Google Sheets
     try:
