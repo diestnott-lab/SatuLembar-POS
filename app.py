@@ -737,7 +737,7 @@ def config_setting_page():
                     with col_e2:
                         edit_jual = st.number_input("Harga Jual Baru", min_value=0, value=int(p_match_row["Harga_Jual"]))
                     with col_e3:
-                        edit_stok = st.number_input("Edit Stok", min_value=0, value=int(p_match_row["Stok_Sistem"])
+                        edit_stok = st.number_input("Edit Stok", min_value=0, value=int(p_match_row["Stok_Sistem"])) 
                     
             # Catatan: Pastikan tombol submit form (st.form_submit_button) milik Anda 
             # tetap ada di bawah sini dengan indentasi (jarak spasi) yang sejajar.
