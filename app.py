@@ -326,7 +326,7 @@ def cash_register_page():
         # Tampilan Ringkasan Biaya
         st.write(f"Subtotal: **Rp {int(total_belanja):,}**")
         if nilai_diskon > 0:
-            st.write(f"Potongan Diskon: <span style='color:red;'>- Rp {nilai_diskon:,,}</span>", unsafe_allow_html=True)
+            st.write(f"Potongan Diskon: <span style='color:red;'>- Rp {int(nilai_diskon) :,}</span>", unsafe_allow_html=True)
         st.markdown(f"### Total Tagihan: <span style='color:green;'>Rp {int(total_tagihan):,}</span>", unsafe_allow_html=True)
         
         # Pilihan Metode Bayar
@@ -339,7 +339,7 @@ def cash_register_page():
             input_bayar = st.number_input("Uang Diterima (Rp)", min_value=0, step=1000, value=int(total_akhir))
             kembalian = input_bayar - total_akhir
             if kembalian >= 0:
-                st.write(f"Kembalian: **Rp {kembalian:,,}**")
+                st.write(f"Kembalian: **Rp {int(kembalian):,}**")
             else:
                 st.error("Uang kurang!")
         else:
