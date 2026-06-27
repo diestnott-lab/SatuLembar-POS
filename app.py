@@ -741,9 +741,9 @@ def config_setting_page():
                     
             # Catatan: Pastikan tombol submit form (st.form_submit_button) milik Anda 
             # tetap ada di bawah sini dengan indentasi (jarak spasi) yang sejajar.
-        else:
-            st.warning("Produk tidak ditemukan.")
-        else:
+            else:
+                 st.warning("Produk tidak ditemukan.")
+         else:
             # Jika database kosong, tampilkan pesan edukatif ini daripada eror merah
             st.info("💡 Database produk Anda masih kosong. Silakan tambah produk baru terlebih dahulu pada menu di atas untuk mengaktifkan fitur edit ini.")
                     
