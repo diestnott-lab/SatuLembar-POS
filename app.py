@@ -724,32 +724,34 @@ def config_setting_page():
         
         # Pengecekan: Jika database produk TIDAK KOSONG, jalankan form edit
                 # 1. 'if' utama harus sejajar lurus dengan 'else' pasangannya
-        if not df_produk.empty:
+                if not df_produk.empty:
             prod_edit = st.selectbox("Pilih Produk yang Diedit", df_produk["Nama_Produk"])
             p_match = df_produk[df_produk["Nama_Produk"] == prod_edit]
             
-            # 2. 'if' kedua (di dalam) juga harus sejajar lurus dengan 'else' miliknya
             if not p_match.empty:
                 p_match_row = p_match.iloc[0]
+                
+                # --- AREA FORM EDIT (Semua input & tombol harus di dalam sini) ---
                 with st.form("form_edit_product"):
                     col_e1, col_e2, col_e3 = st.columns(3)
                     with col_e1:
                         edit_beli = st.number_input("Harga Modal Baru", min_value=0, value=int(p_match_row["Harga_Beli"]))
-                    # ... (dan seterusnya isi form Anda) ...
+                    with col_e2:
+                        edit_jual = st.number_input("Harga Jual Baru", min_value=0, value=int(p_match_row["Harga_Jual"]))
+                    with col_e3:
+                        edit_stok = st.number_input("Edit Stok", min_value=0, value=int(p_match_row["Stok_Sistem"]))
                     
-            else:  # <-- BARIS 746 (Mungkin ini yang eror): PASTIKAN ini sejajar lurus dengan 'if not p_match.empty:'
+                    # TOMBOL SUBMIT: Sekarang posisinya aman di dalam form & sejajar lurus
+                    if st.form_submit_button("Terapkan Perubahan", use_container_width=True):
+                        update_cell_by_id("tb_produk", "ID_Produk", p_match_row["ID_Produk"], "Harga_Beli", edit_beli)
+                        update_cell_by_id("tb_produk", "ID_Produk", p_match_row["ID_Produk"], "Harga_Jual", edit_jual)
+                        update_cell_by_id("tb_produk", "ID_Produk", p_match_row["ID_Produk"], "Stok_Sistem", edit_stok)
+                        st.success("Perubahan data menu berhasil diperbarui!")
+                        st.rerun()
+            else:
                 st.warning("Produk tidak ditemukan.")
-
-        else:  # <-- PASTIKAN ini sejajar lurus dengan 'if not df_produk.empty:' di paling atas
+        else:
             st.info("💡 Database produk Anda masih kosong...")
-
-                    
-                if st.form_submit_button("Terapkan Perubahan", use_container_width=True):
-                    update_cell_by_id("tb_produk", "ID_Produk", p_match["ID_Produk"], "Harga_Beli", edit_beli)
-                    update_cell_by_id("tb_produk", "ID_Produk", p_match["ID_Produk"], "Harga_Jual", edit_jual)
-                    update_cell_by_id("tb_produk", "ID_Produk", p_match["ID_Produk"], "Stok_Sistem", edit_stok)
-                    st.success("Perubahan data menu berhasil diperbarui!")
-                    st.rerun()
 
     # 2. TAB USER (KASIR & ADMIN)
     with tab_m_usr:
