@@ -27,19 +27,21 @@ def init_gsheet_connection():
         "https://www.googleapis.com/auth/drive"
     ]
     
-    # Mendukung pembacaan credentials lokal atau dari Streamlit Secrets (untuk cloud)
-    if os.path.exists("credentials.json"):
-        creds = ServiceAccountCredentials.from_json_keyfile_name("credentials.json", scope)
-    elif "gcp_service_account" in st.secrets:
-        # Untuk deployment cloud aman, bisa simpan JSON di streamlit secrets
-        creds_dict = json.loads(st.secrets["gcp_service_account"])
+        # 1. Cek konfigurasi database dari Streamlit Secrets (Cloud) dahulu
+    if "gcp_service_account" in st.secrets:
+        # Karena format TOML, data otomatis menjadi dictionary (tidak perlu json.loads)
+        creds_dict = dict(st.secrets["gcp_service_account"])
         creds = ServiceAccountCredentials.from_json_keyfile_dict(creds_dict, scope)
+    # 2. Jika tidak ada di Cloud, baru cek file lokal (Pydroid/Laptop)
+    elif os.path.exists("credentials.json"):
+        creds = ServiceAccountCredentials.from_json_keyfile_name("credentials.json", scope)
     else:
-        st.error("File 'credentials.json' tidak ditemukan! Pastikan file berada di folder yang sama dengan app.py.")
+        st.error("Kunci database tidak ditemukan! Pastikan 'gcp_service_account' sudah terisi di Secrets Streamlit.")
         st.stop()
         
     client = gspread.authorize(creds)
-    # Ganti dengan nama Google Sheet Anda yang sudah dibagikan ke email robot
+    
+    # Membuka database Google Sheets
     try:
         sheet = client.open("SatuLembar_POS_Database")
         return sheet
