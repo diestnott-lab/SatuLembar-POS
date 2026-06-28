@@ -175,7 +175,7 @@ def cash_register_page():
             st.warning("Produk tidak ditemukan atau stok kosong.")
         else:
             # Gunakan grid kolom untuk layout produk
-                        grid_cols = st.columns(3)
+            grid_cols = st.columns(3)
             for idx, row in filtered_df.iterrows():
                 with grid_cols[idx % 3]:
                     # 1. Hitung stoknya terlebih dahulu di baris pertama (Gunakan sistem pengaman .get)
