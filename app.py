@@ -194,7 +194,7 @@ def cash_register_page():
                     )
                     
                     # Cek jika stok masih ada
-                    if int(row["Stok_Sistem"]) > 0:
+                    if int(row.get('Stok_Sistem', row.get('Stok', 0))) > 0:
                         if st.button(f"Tambah", key=f"add_{row['ID_Produk']}"):
                             # Tambah ke keranjang belanja
                             # Cari apakah barang sudah ada di keranjang
