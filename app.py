@@ -175,15 +175,19 @@ def cash_register_page():
             st.warning("Produk tidak ditemukan atau stok kosong.")
         else:
             # Gunakan grid kolom untuk layout produk
-            grid_cols = st.columns(3)
+                        grid_cols = st.columns(3)
             for idx, row in filtered_df.iterrows():
                 with grid_cols[idx % 3]:
+                    # 1. Hitung stoknya terlebih dahulu di baris pertama (Gunakan sistem pengaman .get)
+                    stok_tampil = row.get('Stok_Sistem', row.get('Stok', 0))
+                    
+                    # 2. Cetak seluruh komponen kartu produk dalam SATU perintah markdown yang rapi
                     st.markdown(
                         f"""
-                        <div style='border:1px solid #ddd; padding:10px; border-radius:5px; margin-bottom:10px; background-color:#f9f9f9;'>
+                        <div style='border:1px solid #ddd; padding:10px; border-radius:5px; margin-bottom:10px; background-color:#f9f9f9; color:black;'>
                             <strong>{row['Nama_Produk']}</strong><br>
-                            <span style='color:green; font-weight:bold;'>Rp {row['Harga_Jual']:,}</span><br>
-                            <small>Stok: {row['Stok_Sistem']}</small>
+                            <span style='color:green; font-weight:bold;'>Rp {int(row['Harga_Jual']):,}</span><br>
+                            <small style='color:gray;'>Stok: {int(stok_tampil)}</small>
                         </div>
                         """, 
                         unsafe_allow_html=True
