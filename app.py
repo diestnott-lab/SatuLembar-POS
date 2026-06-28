@@ -743,7 +743,8 @@ def config_setting_page():
                     with col_e2:
                         edit_jual = st.number_input("Harga Jual Baru", min_value=0, value=int(p_match_row["Harga_Jual"]))
                     with col_e3:
-                        edit_stok = st.number_input("Edit Stok", min_value=0, value=int(p_match_row["Stok_Sistem"]))
+                        edit_stok = st.number_input("Edit Stok", min_value=0, value=int(p_match_row.get('Stok_Sistem', p_match_row.get('Stok', 0))))
+
                     
                     # TOMBOL SUBMIT: Sekarang posisinya aman di dalam form & sejajar lurus
                     if st.form_submit_button("Terapkan Perubahan", use_container_width=True):
