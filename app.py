@@ -797,7 +797,7 @@ def config_setting_page():
                         st.success(f"Password untuk user {usr_reset} berhasil diubah!")
                         st.rerun()
 
-    # 3. TAB DISKON
+        # 3. TAB DISKON
     with tab_m_disc:
         st.subheader("Atur Potongan Harga & Promo")
         col_cd1, col_cd2 = st.columns([1, 2])
@@ -824,7 +824,7 @@ def config_setting_page():
             st.write("---")
             st.write("**Aktif / Nonaktifkan Promo**")
             
-            # PENGAMAN: Sistem hanya memuat pilihan jika database diskon TIDAK KOSONG
+            # --- PENGAMAN UTAMA AGAR BARIS 827 TIDAK EROR LAGI ---
             if not df_diskon.empty:
                 disc_edit_name = st.selectbox("Pilih Promo", df_diskon["Nama_Diskon"])
                 p_match_disc = df_diskon[df_diskon["Nama_Diskon"] == disc_edit_name]
@@ -839,7 +839,7 @@ def config_setting_page():
                 else:
                     st.warning("Promo tidak ditemukan.")
             else:
-                # Tampilan aman berupa info edukatif jika data masih kosong
+                # Tampilan aman jika data diskon di Google Sheets masih kosong
                 st.info("💡 Belum ada promo yang terdaftar. Silakan buat diskon baru terlebih dahulu di menu sebelah kiri.")
 
     # 4. TAB PROFIL TOKO (STRUK)
