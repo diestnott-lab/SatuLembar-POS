@@ -823,13 +823,24 @@ def config_setting_page():
             # Ubah Status Diskon
             st.write("---")
             st.write("**Aktif / Nonaktifkan Promo**")
-            disc_edit_name = st.selectbox("Pilih Promo", df_diskon["Nama_Diskon"])
-            disc_row_match = df_diskon[df_diskon["Nama_Diskon"] == disc_edit_name].iloc[0]
-            new_status_act = st.selectbox("Status Baru", ["Aktif", "Tidak Aktif"], index=0 if disc_row_match["Status"] == "Aktif" else 1)
-            if st.button("Ubah Status"):
-                update_cell_by_id("tb_diskon", "ID_Diskon", disc_row_match["ID_Diskon"], "Status", new_status_act)
-                st.success("Status promo berhasil diperbarui!")
-                st.rerun()
+            
+            # PENGAMAN: Sistem hanya memuat pilihan jika database diskon TIDAK KOSONG
+            if not df_diskon.empty:
+                disc_edit_name = st.selectbox("Pilih Promo", df_diskon["Nama_Diskon"])
+                p_match_disc = df_diskon[df_diskon["Nama_Diskon"] == disc_edit_name]
+                
+                if not p_match_disc.empty:
+                    disc_row_match = p_match_disc.iloc[0]
+                    new_status_act = st.selectbox("Status Baru", ["Aktif", "Tidak Aktif"], index=0 if disc_row_match["Status"] == "Aktif" else 1)
+                    if st.button("Ubah Status"):
+                        update_cell_by_id("tb_diskon", "ID_Diskon", disc_row_match["ID_Diskon"], "Status", new_status_act)
+                        st.success("Status promo berhasil diperbarui!")
+                        st.rerun()
+                else:
+                    st.warning("Promo tidak ditemukan.")
+            else:
+                # Tampilan aman berupa info edukatif jika data masih kosong
+                st.info("💡 Belum ada promo yang terdaftar. Silakan buat diskon baru terlebih dahulu di menu sebelah kiri.")
 
     # 4. TAB PROFIL TOKO (STRUK)
     with tab_m_shop:
