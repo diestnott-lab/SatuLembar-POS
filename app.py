@@ -292,7 +292,7 @@ def cash_register_page():
                 with col_item2:
                     # Edit Qty langsung
                     new_qty = st.number_input(
-                        "Qty", min_value=0, max_value=item["stock_max"], 
+                        "Qty", min_value=0, max_value=item["stok_max"], 
                         value=item["qty"], key=f"qty_{item['id']}_{i}", label_visibility="collapsed"
                     )
                     if new_qty != item["qty"]:
