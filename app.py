@@ -623,7 +623,7 @@ def stock_management_page():
                 # Simpan ke tb_stok_masuk
                 log_id = f"LOG-{datetime.datetime.now().strftime('%Y%m%d%H%M%S')}"
                 tgl_now = datetime.datetime.now().strftime('%Y-%m-%d')
-                append_data("tb_stok_masuk", [log_id, tgl_now, p_id, jumlah_masuk, nama_supplier])
+                append_data("tb_stock_masuk", [log_id, tgl_now, p_id, jumlah_masuk, nama_supplier])
                 
                 # Update stok di tb_produk
                 update_cell_by_id("tb_produk", "ID_Produk", p_id, "Stock_Sistem", stok_baru_calc)
@@ -650,7 +650,7 @@ def stock_management_page():
             if btn_opname_save:
                 p_row = df_produk[df_produk["Nama_Produk"] == prod_opname_name].iloc[0]
                 p_id = p_row["ID_Produk"]
-                stok_sistem_sebelum = int(p_row["Stok_Sistem"])
+                stok_sistem_sebelum = int(p_row["Stock_Sistem"])
                 selisih_perhitungan = stok_fisik_riil - stok_sistem_sebelum
                 
                 # Simpan log ke tb_opname
@@ -667,9 +667,9 @@ def stock_management_page():
                 ])
                 
                 # Sesuaikan stok sistem di tb_produk mengikuti stok fisik asli
-                update_cell_by_id("tb_produk", "ID_Produk", p_id, "Stok_Sistem", stok_fisik_riil)
+                update_cell_by_id("tb_produk", "ID_Produk", p_id, "Stock_Sistem", stok_fisik_riil)
                 
-                st.success(f"Opname sukses! Stok Sistem diperbarui menjadi {stok_fisik_riil} (Selisih: {selisih_perhitungan})")
+                st.success(f"Opname sukses! Stock Sistem diperbarui menjadi {stok_fisik_riil} (Selisih: {selisih_perhitungan})")
                 st.rerun()
                 
         # Histori Opname
@@ -708,7 +708,7 @@ def config_setting_page():
                 new_pcat = st.text_input("Kategori", placeholder="Makanan/Minuman")
                 new_pbeli = st.number_input("Harga Modal (Beli)", min_value=0, step=500)
                 new_pjual = st.number_input("Harga Jual", min_value=0, step=500)
-                new_pstok = st.number_input("Stok Awal", min_value=0, step=1)
+                new_pstok = st.number_input("Stock Awal", min_value=0, step=1)
                 
                 btn_add_p = st.form_submit_button("Simpan Produk", use_container_width=True)
                 if btn_add_p:
@@ -725,7 +725,7 @@ def config_setting_page():
             
             # Form Update Harga
             st.write("---")
-            st.write("**Update Harga/Stok Cepat**")
+            st.write("**Update Harga/Stock Cepat**")
         
         # Pengecekan: Jika database produk TIDAK KOSONG, jalankan form edit
                 # 1. 'if' utama harus sejajar lurus dengan 'else' pasangannya
@@ -744,14 +744,14 @@ def config_setting_page():
                     with col_e2:
                         edit_jual = st.number_input("Harga Jual Baru", min_value=0, value=int(p_match_row["Harga_Jual"]))
                     with col_e3:
-                        edit_stok = st.number_input("Edit Stok", min_value=0, value=int(p_match_row.get('Stok_Sistem', p_match_row.get('Stok', 0))))
+                        edit_stok = st.number_input("Edit Stock", min_value=0, value=int(p_match_row.get('Stock_Sistem', p_match_row.get('Stok', 0))))
 
                     
                     # TOMBOL SUBMIT: Sekarang posisinya aman di dalam form & sejajar lurus
                     if st.form_submit_button("Terapkan Perubahan", use_container_width=True):
                         update_cell_by_id("tb_produk", "ID_Produk", p_match_row["ID_Produk"], "Harga_Beli", edit_beli)
                         update_cell_by_id("tb_produk", "ID_Produk", p_match_row["ID_Produk"], "Harga_Jual", edit_jual)
-                        update_cell_by_id("tb_produk", "ID_Produk", p_match_row["ID_Produk"], "Stok_Sistem", edit_stok)
+                        update_cell_by_id("tb_produk", "ID_Produk", p_match_row["ID_Produk"], "Stock_Sistem", edit_stok)
                         st.success("Perubahan data menu berhasil diperbarui!")
                         st.rerun()
             else:
