@@ -487,7 +487,7 @@ def cash_register_page():
                 </div>
             """)
             
-        struk_html += textwrap.dedent(f"""
+            struk_html += textwrap.dedent(f"""
                 <div style="display: flex; justify-content: space-between; font-weight: bold; margin-top: 5px;">
                     <span>GRAND TOTAL:</span>
                     <span>Rp {st_data['grand_total']:,}</span>
