@@ -485,7 +485,7 @@ def cash_register_page():
                     <span>Diskon:</span>
                     <span>-Rp {st_data['diskon']:,}</span>
                 </div>
-            """)
+        """)
             
             struk_html += textwrap.dedent(f"""
                 <div style="display: flex; justify-content: space-between; font-weight: bold; margin-top: 5px;">
