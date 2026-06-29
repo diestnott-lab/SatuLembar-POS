@@ -61,6 +61,7 @@ def init_gsheet_connection():
 sh = init_gsheet_connection()
 
 # --- FUNGSI BANTU MEMBACA & MENULIS DATA ---
+@st.cache_data(ttl=10)
 def get_data(sheet_name):
     worksheet = sh.worksheet(sheet_name)
     data = worksheet.get_all_records()
