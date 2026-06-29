@@ -616,7 +616,8 @@ def stock_management_page():
             if btn_restock:
                 p_row = df_produk[df_produk["Nama_Produk"] == produk_restock].iloc[0]
                 p_id = p_row["ID_Produk"]
-                stok_lama = int(p_row["Stok_Sistem"])
+                # --- GANTI BARIS 619 DENGAN KODE AMAN INI ---
+                stok_lama = int(p_row.get('Stock_sistem', p_row.get('Stok_Sistem', 0)))
                 stok_baru_calc = stok_lama + jumlah_masuk
                 
                 # Simpan ke tb_stok_masuk
@@ -668,7 +669,7 @@ def stock_management_page():
                 # Sesuaikan stok sistem di tb_produk mengikuti stok fisik asli
                 update_cell_by_id("tb_produk", "ID_Produk", p_id, "Stok_Sistem", stok_fisik_riil)
                 
-                st.success(f"Opname sukses! Stok sistem diperbarui menjadi {stok_fisik_riil} (Selisih: {selisih_perhitungan})")
+                st.success(f"Opname sukses! Stok Sistem diperbarui menjadi {stok_fisik_riil} (Selisih: {selisih_perhitungan})")
                 st.rerun()
                 
         # Histori Opname
