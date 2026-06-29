@@ -438,8 +438,12 @@ def cash_register_page():
         
         width_px = "280px" if paper_size == "58mm" else "380px"
         
-                # HTML & CSS Struk Thermal
-        struk_html = f"""
+                        # --- 1. TAMBAHKAN IMPORT INI DI BAGISAN PALING ATAS FILE APP.PY ---
+        # (Atau letakkan langsung di sini juga tidak apa-apa)
+        import textwrap
+
+        # --- REPLACED CODE UNTUK STRUK HTML ---
+        struk_html = textwrap.dedent(f"""
         <div style="width: {width_px}; font-family: 'Courier New', Courier, monospace; font-size: 12px; border: 1px solid #ccc; padding: 15px; margin: auto; background-color: #fff; color: #000; box-shadow: 2px 2px 5px rgba(0,0,0,0.1);">
             <div style="text-align: center; margin-bottom: 10px;">
                 <h3 style="margin: 0; font-size: 16px;">{store_name}</h3>
@@ -454,9 +458,10 @@ def cash_register_page():
                 <p style="margin: 0;">-------------------------------</p>
             </div>
             <div style="margin: 10px 0;">
-        """
+        """)
+        
         for item in st_data["items"]:
-            struk_html += f"""
+            struk_html += textwrap.dedent(f"""
                 <div style="display: flex; justify-content: space-between;">
                     <span>{item['nama']}</span>
                 </div>
@@ -464,24 +469,25 @@ def cash_register_page():
                     <span>   {item['qty']} x {item['harga']:,}</span>
                     <span>Rp {item['qty']*item['harga']:,}</span>
                 </div>
-            """
+            """)
             
-        struk_html += f"""
+        struk_html += textwrap.dedent(f"""
                 <p style="margin: 0;">-------------------------------</p>
                 <div style="display: flex; justify-content: space-between;">
                     <span>Subtotal:</span>
                     <span>Rp {st_data['total']:,}</span>
                 </div>
-        """
+        """)
+        
         if st_data["diskon"] > 0:
-            struk_html += f"""
+            struk_html += textwrap.dedent(f"""
                 <div style="display: flex; justify-content: space-between; color: red;">
                     <span>Diskon:</span>
                     <span>-Rp {st_data['diskon']:,}</span>
                 </div>
-            """
+            """)
             
-        struk_html += f"""
+        struk_html += textwrap.dedent(f"""
                 <div style="display: flex; justify-content: space-between; font-weight: bold; margin-top: 5px;">
                     <span>GRAND TOTAL:</span>
                     <span>Rp {st_data['grand_total']:,}</span>
@@ -502,9 +508,10 @@ def cash_register_page():
                 <p style="margin: 5px 0 0 0; text-align: center; font-size: 11px;">{store_footer}</p>
             </div>
         </div>
-        """
+        """)
         
         st.markdown(struk_html, unsafe_allow_html=True)
+
         
         col_btn1, col_btn2 = st.columns(2)
         with col_btn1:
