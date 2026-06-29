@@ -626,7 +626,7 @@ def stock_management_page():
                 append_data("tb_stok_masuk", [log_id, tgl_now, p_id, jumlah_masuk, nama_supplier])
                 
                 # Update stok di tb_produk
-                update_cell_by_id("tb_produk", "ID_Produk", p_id, "Stok_Sistem", stok_baru_calc)
+                update_cell_by_id("tb_produk", "ID_Produk", p_id, "Stock_Sistem", stok_baru_calc)
                 
                 st.success(f"Stok {produk_restock} berhasil diperbarui dari {stok_lama} ke {stok_baru_calc}!")
                 st.rerun()
