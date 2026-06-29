@@ -62,7 +62,7 @@ sh = init_gsheet_connection()
 
 # --- FUNGSI BANTU MEMBACA & MENULIS DATA ---
 def get_data(sheet_name):
-    worksheet = sh.worksheet(SatuLembar_POS_Database)
+    worksheet = sh.worksheet(work_sheet)
     data = worksheet.get_all_records()
     if not data:
         # Jika kosong, buat DataFrame kosong sesuai kolom awal
