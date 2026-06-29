@@ -179,7 +179,7 @@ def cash_register_page():
             for idx, row in filtered_df.iterrows():
                 with grid_cols[idx % 3]:
                     # 1. Hitung stoknya terlebih dahulu di baris pertama (Gunakan sistem pengaman .get)
-                    stok_tampil = row.get('Stok_Sistem', row.get('Stok', 0))
+                    stok_tampil = row.get('Stock_Sistem', row.get('Stock', 0))
                     
                     # 2. Cetak seluruh komponen kartu produk dalam SATU perintah markdown yang rapi
                     st.markdown(
@@ -194,17 +194,17 @@ def cash_register_page():
                     )
                     
                     # Cek jika stok masih ada
-                    if int(row.get('Stok_Sistem', row.get('Stok', 0))) > 0:
+                    if int(row.get('Stock_Sistem', row.get('Stock', 0))) > 0:
                         if st.button(f"Tambah", key=f"add_{row['ID_Produk']}"):
                             # Tambah ke keranjang belanja
                             # Cari apakah barang sudah ada di keranjang
                             found = False
                             for item in st.session_state.cart:
                                 if item["id"] == row["ID_Produk"]:
-                                    if item["qty"] < int(row["Stok_Sistem"]):
+                                    if item["qty"] < int(row["Stock_Sistem"]):
                                         item["qty"] += 1
                                     else:
-                                        st.warning("Jumlah pembelian melebihi stok yang tersedia!")
+                                        st.warning("Jumlah pembelian melebihi stock yang tersedia!")
                                     found = True
                                     break
                             if not found:
@@ -214,7 +214,7 @@ def cash_register_page():
                                     "harga": int(row["Harga_Jual"]),
                                     "hpp": int(row["Harga_Beli"]),
                                     "qty": 1,
-                                    "stok_max": int(row["Stok_Sistem"])
+                                    "stok_max": int(row["Stock_Sistem"])
                                 })
                             st.rerun()
                     else:
@@ -269,7 +269,7 @@ def cash_register_page():
                                     "harga": int(p_info.iloc[0]["Harga_Jual"]),
                                     "hpp": int(p_info.iloc[0]["Harga_Beli"]),
                                     "qty": int(h_row["Jumlah"]),
-                                    "stok_max": int(p_info.iloc[0]["Stok_Sistem"])
+                                    "stok_max": int(p_info.iloc[0]["Stock_Sistem"])
                                 })
                         # Hapus data hold tersebut dari tb_hold agar tidak dobel
                         delete_row_by_condition("tb_hold", "Label_Meja", meja_pilihan)
@@ -292,7 +292,7 @@ def cash_register_page():
                 with col_item2:
                     # Edit Qty langsung
                     new_qty = st.number_input(
-                        "Qty", min_value=0, max_value=item["stok_max"], 
+                        "Qty", min_value=0, max_value=item["stock_max"], 
                         value=item["qty"], key=f"qty_{item['id']}_{i}", label_visibility="collapsed"
                     )
                     if new_qty != item["qty"]:
@@ -383,10 +383,10 @@ def cash_register_page():
             for item in st.session_state.cart:
                 # Cari stok lama
                 p_row = df_produk[df_produk["ID_Produk"] == item["id"]].iloc[0]
-                stok_baru = int(p_row["Stok_Sistem"]) - item["qty"]
+                stok_baru = int(p_row["Stock_Sistem"]) - item["qty"]
                 
                 # Update stok di Google Sheets
-                update_cell_by_id("tb_produk", "ID_Produk", item["id"], "Stok_Sistem", stok_baru)
+                update_cell_by_id("tb_produk", "ID_Produk", item["id"], "Stock_Sistem", stok_baru)
                 
                 # Masukkan log penjualan
                 item_total = item["harga"] * item["qty"]
@@ -590,11 +590,11 @@ def dashboard_page():
 
 # --- HALAMAN MANAJEMEN STOK & STOCK OPNAME ---
 def stock_management_page():
-    st.markdown("### 📦 Manajemen Stok & Stock Opname")
+    st.markdown("### 📦 Manajemen Stock & Stock Opname")
     
     df_produk = get_data("tb_produk")
     
-    tab_stok, tab_opname = st.tabs(["📋 Sisa Stok Sistem", "🔍 Stock Opname Bulanan"])
+    tab_stok, tab_opname = st.tabs(["📋 Sisa Stock Sistem", "🔍 Stock Opname Bulanan"])
     
     with tab_stok:
         st.subheader("Daftar Inventori Terkini")
@@ -612,12 +612,12 @@ def stock_management_page():
             with col_rs3:
                 nama_supplier = st.text_input("Nama Supplier", "PT Sumber Berkah")
                 
-            btn_restock = st.form_submit_button("Simpan Stok Masuk")
+            btn_restock = st.form_submit_button("Simpan Stock Masuk")
             if btn_restock:
                 p_row = df_produk[df_produk["Nama_Produk"] == produk_restock].iloc[0]
                 p_id = p_row["ID_Produk"]
                 # --- GANTI BARIS 619 DENGAN KODE AMAN INI ---
-                stok_lama = int(p_row.get('Stock_sistem', p_row.get('Stok_Sistem', 0)))
+                stok_lama = int(p_row.get('Stock_sistem', p_row.get('Stock_Sistem', 0)))
                 stok_baru_calc = stok_lama + jumlah_masuk
                 
                 # Simpan ke tb_stok_masuk
